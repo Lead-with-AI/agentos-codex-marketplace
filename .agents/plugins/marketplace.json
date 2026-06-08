@@ -1,0 +1,20 @@
+{
+  "name": "lead-with-ai",
+  "interface": {
+    "displayName": "Lead with AI"
+  },
+  "plugins": [
+    {
+      "name": "agentos-cohort3",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agentos-cohort3"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "agentos-cohort3",
+  "version": "1.4.3",
+  "description": "Sets up and runs a personal AgentOS for business leaders. Initialize a portable operating layer, load its context each session, create scoped agents, design workflows, upgrade older AgentOS folders, and capture durable decisions.",
+  "author": {
+    "name": "Lead with AI"
+  },
+  "skills": "./skills/",
+  "keywords": ["agentos", "chief-of-staff", "productivity", "agents", "codex"],
+  "interface": {
+    "displayName": "AgentOS Cohort 3",
+    "shortDescription": "Set up, load, extend, and maintain a personal AgentOS.",
+    "longDescription": "AgentOS Cohort 3 helps business leaders create a portable operating layer made of plain files, then use Codex to load context, create scoped agents, design repeatable workflows, upgrade existing AgentOS folders, and record durable decisions.",
+    "developerName": "Lead with AI",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": [
+      "Set up my AgentOS.",
+      "Load my AgentOS.",
+      "Create a new agent."
+    ]
+  }
+}
