@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Lead with AI icon">
+  <rect width="128" height="128" rx="28" fill="#0f1115"/>
+  <g fill="none" stroke="#94e02f" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="29" y="29" width="70" height="70" rx="13" stroke-width="8"/>
+    <rect x="45" y="45" width="38" height="38" rx="5" stroke-width="6" fill="#f8fff0"/>
+    <path d="M42 14v15M56 14v15M72 14v15M86 14v15" stroke-width="6"/>
+    <path d="M42 99v15M56 99v15M72 99v15M86 99v15" stroke-width="6"/>
+    <path d="M14 42h15M14 56h15M14 72h15M14 86h15" stroke-width="6"/>
+    <path d="M99 42h15M99 56h15M99 72h15M99 86h15" stroke-width="6"/>
+  </g>
+  <rect x="54" y="54" width="20" height="20" rx="3" fill="#111318"/>
+</svg>
