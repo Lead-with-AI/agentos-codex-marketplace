@@ -21,7 +21,10 @@ You can trigger every capability two ways in Codex: explicitly invoke the skill,
   Records a decision into the portable `DECISIONS.md` so it persists outside any single tool, with an optional mirror into memory.
 
 - **Design a workflow** — "create a workflow", "build my daily briefing", "set up an automation"
-  Run inside an agent. Reads the agent and its connectors, suggests fitting workflows (e.g. daily or weekly briefing for a Chief of Staff), builds a real tested skill for the workflow in the agent's `workflows/` folder, and offers to schedule it as an automation.
+  Run inside an agent. Reads the agent and its connectors, suggests fitting workflows (e.g. daily or weekly briefing for a Chief of Staff), builds a real tested skill for the workflow in the agent's `workflows/` folder, and hands scheduling to the timezone-safe automation scheduler.
+
+- **Schedule an automation** — "schedule this daily at 7am", "run my daily brief at 7:00 a.m.", "fix this automation time"
+  Creates, updates, or verifies Codex automations with timezone handling. It checks that the next run matches the leader's intended local time before saying the automation is scheduled.
 
 - **Upgrade an existing AgentOS** — "upgrade my AgentOS", "migrate my AgentOS", "check my AgentOS"
   For an AgentOS built earlier (often by hand). Backs everything up, then analyzes each file, keeps the leader's worthwhile work, and migrates it to the current standard structure. Setup also offers this automatically when it detects an existing AgentOS.
@@ -35,6 +38,7 @@ You can trigger every capability two ways in Codex: explicitly invoke the skill,
 | Skill | create-agent | Scaffold a new scoped agent |
 | Skill | decision-capture | Record durable, portable decisions |
 | Skill | workflow-designer | Build a tested workflow skill for an agent, optionally scheduled |
+| Skill | schedule-automation | Create, update, or verify timezone-safe Codex automations |
 | Skill | upgrade | Migrate an existing AgentOS to the current structure, keeping the leader's work |
 
 The plugin also bundles `core-files/` (the portable AgentOS files copied in during setup), `reference-agents/chief-of-staff/` (a complete example agent), and `Templates/` (scaffolds the create-agent skill populates).
