@@ -186,15 +186,7 @@ So instead, give the leader clear, plain-language, step-by-step instructions for
 
 Keep it warm and simple — the goal is that the leader knows exactly what to do next in the Codex app. Be clear that parent-folder access is the one people miss, and it is what makes inheritance work. Whenever they want to use this agent again, they open that Codex project or thread and load it.
 
-### Step 7a — Give them a copy-paste project description
-
-Output a short, ready-to-paste description for the new Codex project or thread, in a fenced code block so the leader can copy it cleanly if they want a label for it. Keep it to one or two sentences, written from the agent's perspective/role, personalized to the leader and organization. For example:
-
-```
-This is the Chief of Staff agent within [Leader]'s AgentOS at [Organization]. It manages the flow of information, protects the leader's time and focus, prepares them for what's coming, and keeps decisions moving — operating with read-and-draft authority and seeking approval before sending or changing anything.
-```
-
-Tell the leader plainly: "Use the text in the box as the description for this agent project if Codex asks for one." Do not include file names or paths in the call-out.
+Do not output a project description or tell the leader to paste instructions into a Codex project. Codex project setup in this flow is folder-based: the leader opens the agent folder, starts a Local thread, and says "load my agent".
 
 ## Failure Handling Summary
 
