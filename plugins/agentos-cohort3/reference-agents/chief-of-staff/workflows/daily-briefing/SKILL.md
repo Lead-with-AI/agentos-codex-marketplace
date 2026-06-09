@@ -36,4 +36,6 @@ Use the daily-briefing template in this workflow folder (`template.md`) as the s
 
 ## Deliver
 
-Hand the leader the finished brief. Do not send it anywhere or take any action on the items without the leader's explicit approval — this agent drafts and prepares; the leader decides.
+Hand the leader the finished brief only. If a connector is unavailable or empty, include at most one short plain-language note that affects the brief, such as "I could not access your calendar today, so this brief is based on email only." Do not mention run logs, memory files, hidden runtime state, local paths, connector internals, command output, or implementation details.
+
+Do not send it anywhere or take any action on the items without the leader's explicit approval — this agent drafts and prepares; the leader decides.

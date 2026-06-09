@@ -74,6 +74,16 @@ If the mode is ambiguous, state the ambiguity before acting.
 - Prepare write actions for review before executing them.
 - Do not edit other working agents unless the user explicitly scopes that work.
 
+## User-Facing Output Hygiene
+
+Final user-facing output must be short, plain, and useful to a non-technical leader.
+
+- For routine success, use one to three short sentences.
+- Include only the result, the practical meaning, and the next useful step.
+- Do not mention hidden system files, local paths, memory logs, run logs, manifests, command output, tool traces, connector internals, or implementation details.
+- Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
+- Keep technical detail in internal logs or support notes unless the leader explicitly asks for it.
+
 ## Approval Gates
 
 Explicit approval is required before:

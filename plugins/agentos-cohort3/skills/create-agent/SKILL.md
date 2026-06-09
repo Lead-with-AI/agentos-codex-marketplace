@@ -17,6 +17,16 @@ Create a new scoped agent inside the leader's existing AgentOS. The agent lives 
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
+## Executive Output Contract
+
+Final user-facing output must be short, plain, and useful to a non-technical leader.
+
+- For success, use one to three short sentences plus only the necessary Codex UI steps this skill requires.
+- Include only what was created, what it does for the leader, how to use it, and where to find it in Codex when relevant.
+- Do not mention `.codex`, `memory.md`, `MemoryMD`, internal automation folders, local file paths, manifests, plugin roots, command output, connector implementation details, stack traces, or hidden logs.
+- Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
+- Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
+
 ## Step 1 — Confirm an AgentOS exists
 
 Check the working folder for `USER.md`, `ORG.md`, and `AGENTS.md`.

@@ -21,6 +21,16 @@ Initialize a new AgentOS in the current working folder. This runs **once** per A
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
+## Executive Output Contract
+
+Final user-facing output must be short, plain, and useful to a non-technical leader.
+
+- For success, use one to three short sentences.
+- Include only what was completed, what it now lets the leader do, and the next useful prompt or Codex UI step.
+- Do not mention `.codex`, `memory.md`, `MemoryMD`, internal automation folders, local file paths, manifests, plugin roots, command output, connector implementation details, stack traces, or hidden logs.
+- Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
+- Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
+
 ## Operating Constraints
 
 - The working folder is the user's current AgentOS folder. Resolve it as the directory the conversation is operating in (the connected/working folder), not the plugin folder.
@@ -185,7 +195,7 @@ Confirm all eight files now exist in the working folder: `USER.md`, `ORG.md`, `A
 
 Write the verification result to the setup log: list which of the eight files are present, and the placeholder-check result.
 
-If any file is missing or any copy failed, write the failure to the setup log with the specific step and file that failed, then stop and tell the leader plainly that one step did not complete. Name what is missing in plain language (e.g. "your company profile didn't save"), and tell them where the setup log is (`logs/agentos-cohort3-setup.md` in their AgentOS folder) so they can send it to support to diagnose. Do not pretend success.
+If any file is missing or any copy failed, write the failure to the setup log with the specific step and file that failed, then stop and tell the leader plainly that one step did not complete. Name what is missing in plain language (e.g. "your company profile didn't save"). Mention the setup log only as a support artifact if they need help diagnosing the issue; do not expose the path or technical log detail in normal output. Do not pretend success.
 
 ## Step 7 — Confirm completion
 
@@ -198,6 +208,6 @@ Then tell them the one thing they need to do next: at the start of any new Codex
 - AgentOS already exists → stop at Step 1, redirect to load.
 - Interview incomplete → keep asking; do not proceed without the required answers.
 - Web research empty → build ORG.md from interview answers, note limited information.
-- File copy or write fails → record it in `logs/agentos-cohort3-setup.md`, stop, report plainly which part failed, point the leader to the log so they can send it to support, never claim false success.
+- File copy or write fails → record it in `logs/agentos-cohort3-setup.md`, stop, report plainly which part failed, mention the setup log only as a support artifact if needed, never claim false success.
 
 Every run, success or failure, must leave a coherent setup log in the AgentOS folder. The log is the leader's evidence to hand to support and the diagnostic record we read together.

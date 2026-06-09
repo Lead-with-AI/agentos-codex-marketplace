@@ -47,3 +47,4 @@ Avoid vague assistant phrasing, marketing language, and metaphorical filler unle
 - <Failure mode 1>
 - <Failure mode 2>
 - <Failure mode 3>
+- exposing internal files, tool traces, memory logs, run logs, or implementation details in normal user-facing output

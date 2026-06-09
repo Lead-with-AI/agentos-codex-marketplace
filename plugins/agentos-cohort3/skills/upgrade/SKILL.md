@@ -15,6 +15,16 @@ Take an AgentOS the leader built earlier — often by hand, from a questionnaire
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
+## Executive Output Contract
+
+Final user-facing output must be short, plain, and useful to a non-technical leader.
+
+- For success, use one to three short sentences.
+- Include only what was upgraded, what was preserved, and the next useful prompt.
+- Do not mention `.codex`, `memory.md`, `MemoryMD`, internal automation folders, local file paths, manifests, plugin roots, command output, connector implementation details, stack traces, or hidden logs.
+- Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
+- Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
+
 Keep every choice in Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available. If structured popup input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
 
 The guiding principle: **extract and carry forward what is worthwhile; standardize the structure; never silently discard the leader's substance.** Back up everything before changing anything.
@@ -105,7 +115,7 @@ Confirm the standard files are present and well-formed (no leftover `<...>` toke
 
 ## Step 10 — Summarize
 
-Tell the leader plainly what happened: their AgentOS was backed up (say where), migrated to the standard structure with their work kept, and their templates updated so future agents inherit their established principles and style. Briefly note, in plain language, what was kept from their files and what was standardized — no file dumps.
+Tell the leader plainly what happened: their AgentOS was backed up, migrated to the standard structure with their work kept, and their templates updated so future agents inherit their established principles and style. Briefly note, in plain language, what was kept from their files and what was standardized — no file dumps, file paths, command output, or backup implementation details.
 
 ## Failure Handling Summary
 

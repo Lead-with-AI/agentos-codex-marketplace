@@ -16,6 +16,16 @@ Record a durable decision into the leader's AgentOS. The decision is written to 
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
+## Executive Output Contract
+
+Final user-facing output must be short, plain, and useful to a non-technical leader.
+
+- For success, use one to three short sentences.
+- Include only what was saved, what it means for future work, and any next useful prompt.
+- Do not mention `.codex`, `memory.md`, `MemoryMD`, internal automation folders, local file paths, manifests, plugin roots, command output, connector implementation details, stack traces, or hidden logs.
+- Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
+- Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
+
 ## Step 1 — Confirm an AgentOS exists
 
 Check the working folder for `DECISIONS.md` (and `AGENTS.md` to confirm this is an AgentOS).
@@ -71,6 +81,8 @@ If a session memory system is available in this environment, also write a short 
 The **source of truth is `DECISIONS.md`** — the portable file. The memory mirror is secondary and tool-specific. If no memory system is available, skip this step silently; it is not a failure.
 
 Do not mirror sensitive personal information into memory. Record the decision, not private detail.
+
+Never mention the memory mirror, memory system, or storage mechanics in the user-facing confirmation unless the leader explicitly asks where the decision lives.
 
 ## Step 5 — Confirm
 

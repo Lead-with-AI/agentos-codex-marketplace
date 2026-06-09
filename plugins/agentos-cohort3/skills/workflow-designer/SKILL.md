@@ -18,6 +18,16 @@ Design and build a workflow for the agent you are operating in. A **workflow** i
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
+## Executive Output Contract
+
+Final user-facing output must be short, plain, and useful to a non-technical leader.
+
+- For success, use one to three short sentences.
+- Include only what was created, what it does, how to run it, and where to find it in the Codex UI when relevant.
+- Do not mention `.codex`, `memory.md`, `MemoryMD`, internal automation folders, local file paths, manifests, plugin roots, command output, connector implementation details, stack traces, or hidden logs.
+- Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
+- Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
+
 Keep every user-facing question in Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available. Never use a free-text prompt except as an explicit "Other / let me describe it" choice. If structured popup input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
 
 If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and include an "Other / choose several" path, then ask one short follow-up only when needed.
@@ -85,6 +95,8 @@ Let skill-creator do its job — draft, test, and validate the skill — so it i
 
 Offer the leader the deeper skill-creator eval loop if they want maximum confidence, but the three steps above are the floor. Never ship a workflow skill that hasn't been drafted properly and run at least once.
 
+Every generated workflow skill must include its own final-output rule: return the workflow result or brief only, plus at most one short plain-language connector note when something unavailable affects the result. Allowed: "I could not access your calendar today, so this brief is based on email only." Forbidden: "Calendar connector failed scope auth; memory.md updated."
+
 ### Where the workflow skill goes
 
 Store the finished workflow skill inside the agent's own **`workflows/`** folder, so it travels with the agent:
@@ -104,15 +116,15 @@ A workflow becomes an **automation** when it runs on a schedule. Once the workfl
 
 If they choose daily or weekly, ask the time with a second guided Codex prompt so they never face a blank prompt — for example "What time should it run?" with options like "7:00 AM", "8:00 AM", "9:00 AM", "Other time" (the "Other time" choice is the free-text path). For weekly, also ask which day the same way.
 
-Then create or prepare a Codex automation if the current Codex app environment exposes automation creation. Pass it a **self-contained** prompt that runs this workflow skill — future runs must not depend on this conversation, so spell it out: which agent, run which workflow skill (by name and path), using which connectors, producing what output. For example: "Operating as the [agent name], run the [workflow-name] workflow defined in workflows/[workflow-name]/SKILL.md, and deliver the result to the leader."
+Then create or prepare a Codex automation if the current Codex app environment exposes automation creation. Pass it a **self-contained** prompt that runs this workflow skill — future runs must not depend on this conversation, so spell it out: which agent, which workflow skill to run, which connectors it may use, and what result it should produce. The automation prompt must also include this final-output rule: "In the final response, deliver only the useful workflow result and any plain-language action needed from the leader. Do not mention run logs, memory files, hidden runtime state, local paths, connector internals, command output, or implementation details."
 
-If automation creation is not available from the current thread, give the leader the exact schedule and self-contained prompt to use in the Codex app Automations flow. Do not pretend the automation was created.
+If automation creation is not available from the current thread, say plainly that the automation was not created, then give exactly one Codex UI next step: open Codex Automations and create it there using the schedule they chose. Do not provide hidden paths, tool details, or internal prompt mechanics unless the leader explicitly asks.
 
 If they decline, that's fine — the workflow stays available to run on demand whenever they ask.
 
 ## Step 7 — Confirm
 
-Tell the leader plainly that their workflow is built and ready, in one or two sentences: what it does, how to run it ("just say 'give me my daily briefing'"), and — if scheduled — when it will run automatically. No file names, no jargon.
+Tell the leader plainly that their workflow is built and ready, in one to three short sentences. If it is on demand, say what it does and how to run it ("just say 'give me my daily briefing'"). If it is scheduled, say the plain workflow name, the schedule, that it will appear under Codex Automations, and how to run it manually. No file names, paths, logs, memory terminology, connector internals, or jargon.
 
 ## Failure Handling Summary
 
