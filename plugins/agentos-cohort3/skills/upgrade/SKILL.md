@@ -15,7 +15,7 @@ Take an AgentOS the leader built earlier — often by hand, from a questionnaire
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
-Keep every choice a guided Codex user-input prompt when that is available in the Codex app. If structured user input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
+Keep every choice in Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available. If structured popup input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
 
 The guiding principle: **extract and carry forward what is worthwhile; standardize the structure; never silently discard the leader's substance.** Back up everything before changing anything.
 
@@ -32,7 +32,7 @@ Then present them clearly:
 1. **Migrate it (recommended)** — "I'll keep all of your work. First I make a full backup of your current files, then I bring them up to the standard structure so everything works cleanly going forward. Nothing you wrote is lost."
 2. **Stop and do a clean rebuild instead** — "We leave this as-is and start fresh in a new folder, where I'll walk you through creating everything from scratch. Your current work here stays untouched, but the new AgentOS won't carry it over."
 
-Then ask the choice with guided Codex input: "Which would you like?" — options: "Migrate and keep my work (recommended)" / "Stop — I'll do a clean rebuild".
+Then call `request_user_input`: "Which would you like?" Options: "Migrate (recommended)" / "Stop".
 
 If they choose clean rebuild, stop this skill. Tell them to open a fresh, empty folder and run setup there for a clean build. Do not migrate and do not change anything here.
 
@@ -40,7 +40,7 @@ If they choose clean rebuild, stop this skill. Tell them to open a fresh, empty 
 
 If they chose migrate, explain plainly what will happen: "I'll keep all of your work. First I'll make a complete backup of your current AgentOS, then I'll go through each file, keep what's worth keeping, and rewrite everything into the standard structure so it works cleanly going forward. Your originals are saved and nothing is lost."
 
-Then use guided Codex input: "Ready to go ahead?" — "Yes, migrate it" / "No, not now". If no, stop and change nothing. This is their second chance to back out before anything is touched.
+Then call `request_user_input`: "Ready to go ahead?" Options: "Yes, migrate it" / "No, not now". If no, stop and change nothing. This is their second chance to back out before anything is touched.
 
 ## Step 4 — Full backup first (before any change)
 

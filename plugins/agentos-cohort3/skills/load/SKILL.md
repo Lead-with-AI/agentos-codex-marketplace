@@ -21,6 +21,12 @@ Load an existing AgentOS into the current conversation. This runs at the start o
 
 This skill is **read-only**. It loads and reads context. It must not create, edit, move, or delete any file. The only thing it produces is the spoken briefing to the leader.
 
+## Codex Popup-Input Rule
+
+When this skill needs the leader to choose between options, call Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available.
+
+Use conversational text only if the structured popup input tool is not available in the current Codex mode.
+
 ## Step 1 — Work out where you are: the AgentOS root, or an agent folder
 
 Check the working folder for `AGENTS.md`, then determine which kind of folder this is.
@@ -33,7 +39,7 @@ Check the working folder for `AGENTS.md`, then determine which kind of folder th
   - **If you can read them**, good — Codex can see the parent AgentOS folder. Load the agent's own files plus the inherited parent files, and brief normally as that agent.
   - **If you cannot read them**, do **not** fail silently or guess. Load what you can from the agent folder, then tell the leader plainly: their agent can't see their main AgentOS. Give them the Codex fix in plain language: open the top-level AgentOS folder as the Codex project, or grant Codex access to that parent folder using the app's normal project/folder access flow, then say "load my agent" again. Then wait.
 
-**Case C — neither.** No `AGENTS.md`, no `USER.md`/`ORG.md`. This folder has not been set up — it's empty. The leader almost certainly wants to **create** their AgentOS (they likely said something like "start my AgentOS" in a new empty folder, meaning "set it up"). Do not just point them elsewhere and leave them stuck. Use guided Codex input: "There's no AgentOS in this folder yet. Would you like to set one up now?" — options: "Yes, set up my AgentOS now" / "No, not right now". If yes, hand off to the setup skill and run it. If no, stop. End this skill either way.
+**Case C — neither.** No `AGENTS.md`, no `USER.md`/`ORG.md`. This folder has not been set up — it's empty. The leader almost certainly wants to **create** their AgentOS (they likely said something like "start my AgentOS" in a new empty folder, meaning "set it up"). Do not just point them elsewhere and leave them stuck. Call `request_user_input` with this question: "There's no AgentOS in this folder yet. Would you like to set one up now?" Options: "Set it up now" / "Not right now". If yes, hand off to the setup skill and run it. If no, stop. End this skill either way.
 
 ## Step 2 — Read the core context, silently
 

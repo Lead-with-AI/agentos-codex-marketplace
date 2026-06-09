@@ -18,7 +18,9 @@ Design and build a workflow for the agent you are operating in. A **workflow** i
 
 **Who you're talking to.** Your audience is high-functioning, highly successful, non-technical executives and leaders. They are sharp and capable, but file systems, folders, and technical terms create friction for them. Speak in plain language. Explain what to do, not how it works under the hood. Never use jargon or show file names, paths, or tool names. Never talk down to them. When something goes wrong, keep your wording simplest of all — a confused leader needs the clearest possible next step, not more detail. This skill body is for you, the executing agent — not for the leader to read.
 
-Keep every user-facing question as a guided Codex user-input prompt when that is available in the Codex app — never a free-text prompt except as an explicit "Other / let me describe it" choice. If structured user input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
+Keep every user-facing question in Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available. Never use a free-text prompt except as an explicit "Other / let me describe it" choice. If structured popup input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
+
+If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and include an "Other / choose several" path, then ask one short follow-up only when needed.
 
 This skill is **agent-generic**: it must work inside any agent in the AgentOS (Chief of Staff, research assistant, content agent, anything). It learns what the agent is *before* it suggests anything, so its suggestions fit that agent.
 
@@ -42,7 +44,7 @@ From this, form a clear picture of: what this agent is for, who it serves, and w
 
 ## Step 3 — Suggest workflows (guided pop-up)
 
-Use guided Codex input: "What would you like your [agent name] to do for you, as a repeatable workflow?"
+Call `request_user_input`: "What would you like your [agent name] to do for you, as a repeatable workflow?"
 
 Propose options tailored to *this* agent, derived from Step 2. For a Chief of Staff with email and calendar, sensible first options are:
 
@@ -57,7 +59,7 @@ Keep daily and weekly as **separate** options, not bundled. Always include "Othe
 
 ## Step 4 — Interview the workflow details (guided pop-ups)
 
-Once they pick a workflow, ask only what you need to define it well, each as guided Codex input with sensible options:
+Once they pick a workflow, ask only what you need to define it well, each with `request_user_input` and sensible options:
 
 - **What it should include** — offer concrete content choices for that workflow (e.g. for a daily briefing: "Today's calendar and priorities", "Plus unread/important email", "Plus open commitments and follow-ups"). If the Codex guided-input UI supports selecting more than one option, allow multiple selections. If it only supports a single choice, present the same options as a checklist and ask the leader to choose all that apply in one answer.
 - **How it should be delivered** — e.g. "A short written briefing", "A bulleted summary", "Other".

@@ -28,11 +28,13 @@ Initialize a new AgentOS in the current working folder. This runs **once** per A
 - Do not modify bundled plugin files. They are read-only source.
 - Create files only. Never overwrite an existing AgentOS file.
 
-## Codex Guided-Input Rule
+## Codex Popup-Input Rule
 
-When the skill calls for a guided choice, use Codex's structured user-input prompt when it is available in the Codex app. Preserve the question sequence and the option sets described below. Do not redesign the interview into a different cadence.
+When the skill calls for a guided choice, you must call Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available.
 
-If structured user input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
+Preserve the question sequence and option sets below. Use one popup per question. Use short option labels and one-sentence descriptions so the leader can choose without reading a long chat message.
+
+If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and provide a clear "Other / choose several" option, then ask one short follow-up only when needed. Conversational numbered-list questions are the last resort, only when the structured popup input tool is not available in the current Codex mode.
 
 ## Step 1 — Boundary checks: confirm this is a fresh top-level AgentOS root
 
@@ -45,7 +47,7 @@ Look at the working folder. If it has its own `AGENTS.md` whose content referenc
 Check the parent directory for `../USER.md` and `../ORG.md`. If they exist, this folder is a subfolder *inside* an existing AgentOS — setup must never run here. **Stop.** Tell the leader plainly that their AgentOS already exists one level up, and they should load it ("load my AgentOS") rather than set up a new one. Route to load and end the skill.
 
 **Check C — Does an AgentOS already exist in this folder?**
-Check the working folder for `USER.md` and `ORG.md`. If **either** exists, an AgentOS is already here — do not build a fresh one. Use a guided Codex choice: "I found an existing AgentOS here. What would you like to do?" — options: (1) "Load it into this conversation" (route to load), (2) "Upgrade it to the current structure, keeping my work (recommended)" (hand off to the `agentos-upgrade` skill). End setup after handing off.
+Check the working folder for `USER.md` and `ORG.md`. If **either** exists, an AgentOS is already here — do not build a fresh one. Call `request_user_input` with this question: "I found an existing AgentOS here. What would you like to do?" Options: (1) "Load it" (route to load), (2) "Upgrade it (recommended)" (hand off to the `agentos-upgrade` skill). End setup after handing off.
 
 **Only if all three checks are clear** — no agent signature, no parent AgentOS, nothing already here — proceed with a fresh build.
 
@@ -91,7 +93,7 @@ If they paste or describe a background, capture it for the Background section of
 
 ### Part C — How they like to work (guided choices)
 
-For each of the following, present the options with Codex guided input. They can always pick an "other" / free-text path when the Codex app offers one. These shape how the assistant interacts with them. Offer real, distinct options — do not just ask open-ended.
+For each of the following, call `request_user_input`. They can always pick an "other" / free-text path when the Codex app offers one. These shape how the assistant interacts with them. Offer real, distinct options — do not just ask open-ended, and do not print numbered option lists into chat when the popup tool is available.
 
 1. **Interaction style** — e.g. (a) Direct and concise — get to the point, (b) Warm and conversational, (c) Detailed and thorough — show the reasoning. 
 2. **How much pushback they want** — e.g. (a) Challenge me hard when something's weak, (b) Offer alternatives but don't belabor it, (c) Mostly do what I ask unless it's clearly wrong.

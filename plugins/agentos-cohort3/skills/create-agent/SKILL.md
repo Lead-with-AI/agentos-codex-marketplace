@@ -33,13 +33,15 @@ Read, silently:
 
   Do not treat the reference as already fitting the leader. Even if the leader's role resembles the example, the reference is not their agent — it is a template-quality example. Never say or imply "this reference already fits you, so I'll just use it." Always build the agent from the interview answers and the leader's own context. Reuse the reference's *structure and standard*, never its example content as if it were the leader's.
 
-## Interview Rule — Use Codex Guided Input For Every Question
+## Interview Rule — Use Codex Popup Input For Every Question
 
-This is critical and overrides any default conversational habit. **Every question you put to the leader in this skill must use Codex's structured user-input prompt when it is available in the Codex app, with concrete options.** Do not redesign the interview sequence. Do not drop into open-ended free-text mode unless the step explicitly offers a "let me describe it" / "let me write my own" path.
+This is critical and overrides any default conversational habit. **Every question you put to the leader in this skill must call Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app, with concrete options.** Do not print the question and options as normal chat text when the popup tool is available. Do not redesign the interview sequence. Do not drop into open-ended free-text mode unless the step explicitly offers a "let me describe it" / "let me write my own" path.
 
 Free-text entry is allowed **only** when it is presented as one of the offered choices (for example a "Let me write my own" option). It is never the default or the fallback. If a choice needs refinement, present the refinement as another guided Codex choice, not an open prompt.
 
-If structured user input is not available in the current Codex mode, ask the same guided question conversationally with the same concrete options and wait for the leader's answer before continuing.
+If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and include an "Other / choose several" path, then ask one short follow-up only when needed.
+
+If structured popup input is not available in the current Codex mode, ask the same guided question conversationally with the same concrete options and wait for the leader's answer before continuing.
 
 ## Step 3 — Suggest a Chief of Staff only if they have no agents yet
 
