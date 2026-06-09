@@ -1,7 +1,9 @@
 {
   "name": "lead-with-ai",
   "interface": {
-    "displayName": "Lead with AI"
+    "displayName": "Lead with AI",
+    "logo": "./plugins/agentos-cohort3/assets/lead-with-ai-icon.svg",
+    "icon": "./plugins/agentos-cohort3/assets/lead-with-ai-icon.svg"
   },
   "plugins": [
     {
