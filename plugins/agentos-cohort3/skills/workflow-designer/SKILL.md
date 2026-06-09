@@ -114,9 +114,20 @@ A workflow becomes an **automation** when it runs on a schedule. Once the workfl
 
 If they choose daily or weekly, ask the time with a second scripted text question so they never face a blank prompt — for example "What time should it run?" with options like "7:00 AM", "8:00 AM", "9:00 AM", "Other time" (the "Other time" choice is the free-text path). For weekly, also ask which day the same way.
 
-Then create or prepare a Codex automation if the current Codex app environment exposes automation creation. Pass it a **self-contained** prompt that runs this workflow skill — future runs must not depend on this conversation, so spell it out: which agent, which workflow skill to run, which connectors it may use, and what result it should produce. The automation prompt must also include this final-output rule: "In the final response, deliver only the useful workflow result and any plain-language action needed from the leader. Do not mention run logs, memory files, hidden runtime state, local paths, connector internals, command output, or implementation details."
+Then hand scheduling to the `agentos-schedule-automation` skill. Do not create a Codex automation directly from this skill. The scheduler owns timezone resolution, local-to-UTC conversion, automation creation/update, next-run verification, daylight-saving checks, and the final scheduling confirmation.
 
-If automation creation is not available from the current thread, say plainly that the automation was not created, then give exactly one Codex UI next step: open Codex Automations and create it there using the schedule they chose. Do not provide hidden paths, tool details, or internal prompt mechanics unless the leader explicitly asks.
+Pass the scheduler:
+
+- the plain workflow name
+- daily, weekday, or weekly frequency
+- requested local time
+- requested timezone if the leader gave one
+- agent name and working folder
+- the self-contained automation prompt that runs this workflow skill
+
+The automation prompt must include this final-output rule: "In the final response, deliver only the useful workflow result and any plain-language action needed from the leader. Do not mention run logs, memory files, hidden runtime state, local paths, connector internals, command output, or implementation details."
+
+If the scheduler cannot verify the actual next run, do not say the workflow is scheduled. Say the workflow is ready, but the automation schedule was not verified.
 
 If they decline, that's fine — the workflow stays available to run on demand whenever they ask.
 
