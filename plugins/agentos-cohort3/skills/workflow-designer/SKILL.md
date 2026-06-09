@@ -3,8 +3,8 @@ name: agentos-workflow-designer
 description: >
   Designs and builds the first (or next) workflow for an agent in a leader's AgentOS — for
   example a daily briefing or weekly briefing for a Chief of Staff. Reads the agent it is working
-  in, suggests sensible workflows for that specific agent, interviews the leader through guided
-  guided Codex input, then builds a real, tested skill for the workflow and offers to schedule it.
+  in, suggests sensible workflows for that specific agent, interviews the leader through scripted
+  text choices, then builds a real, tested skill for the workflow and offers to schedule it.
   Triggered by "create a workflow", "build a workflow", "set up an automation", "create my daily
   briefing", or "add a routine for this agent". In Codex, the leader may invoke this skill
   explicitly from the skill picker or by asking in plain language. Use when an agent
@@ -28,9 +28,7 @@ Final user-facing output must be short, plain, and useful to a non-technical lea
 - Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
 - Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
 
-Keep every user-facing question in Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available. Never use a free-text prompt except as an explicit "Other / let me describe it" choice. If structured popup input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
-
-If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and include an "Other / choose several" path, then ask one short follow-up only when needed.
+Normal Codex mode uses normal chat text for these questions. Ask every user-facing choice as scripted text with concrete options, then wait for the leader's answer. Never use a free-text prompt except as an explicit "Other / let me describe it" choice.
 
 This skill is **agent-generic**: it must work inside any agent in the AgentOS (Chief of Staff, research assistant, content agent, anything). It learns what the agent is *before* it suggests anything, so its suggestions fit that agent.
 
@@ -52,9 +50,9 @@ Read, silently:
 
 From this, form a clear picture of: what this agent is for, who it serves, and what tools it can actually use. Every workflow you suggest must be something this agent could genuinely do with the connectors it has. Do not suggest a workflow that needs a tool the agent wasn't given.
 
-## Step 3 — Suggest workflows (guided pop-up)
+## Step 3 — Suggest workflows
 
-Call `request_user_input`: "What would you like your [agent name] to do for you, as a repeatable workflow?"
+Ask exactly: "What would you like your [agent name] to do for you, as a repeatable workflow?"
 
 Propose options tailored to *this* agent, derived from Step 2. For a Chief of Staff with email and calendar, sensible first options are:
 
@@ -67,11 +65,11 @@ Keep daily and weekly as **separate** options, not bundled. Always include "Othe
 
 **Use the bundled reference workflows as ready-made starting points.** The plugin ships proven, pro-level reference workflows for a Chief of Staff at the plugin root's `reference-agents/chief-of-staff/workflows/` folder — `daily-briefing/` and `weekly-briefing/`, each with a `SKILL.md` and an output `template.md`. When the leader picks a daily or weekly briefing (or the agent being built is Chief-of-Staff-like), use the matching reference workflow as the basis: adapt its skill and template to the leader and their connectors rather than starting from a blank page. These references are the quality bar — build to their standard. For workflows with no reference, build from scratch to the same standard.
 
-## Step 4 — Interview the workflow details (guided pop-ups)
+## Step 4 — Interview the workflow details
 
-Once they pick a workflow, ask only what you need to define it well, each with `request_user_input` and sensible options:
+Once they pick a workflow, ask only what you need to define it well, each as a scripted text question with sensible options:
 
-- **What it should include** — offer concrete content choices for that workflow (e.g. for a daily briefing: "Today's calendar and priorities", "Plus unread/important email", "Plus open commitments and follow-ups"). If the Codex guided-input UI supports selecting more than one option, allow multiple selections. If it only supports a single choice, present the same options as a checklist and ask the leader to choose all that apply in one answer.
+- **What it should include** — offer concrete content choices for that workflow (e.g. for a daily briefing: "Today's calendar and priorities", "Plus unread/important email", "Plus open commitments and follow-ups"). Present the options as a checklist and ask the leader to choose all that apply in one answer.
 - **How it should be delivered** — e.g. "A short written briefing", "A bulleted summary", "Other".
 - Anything else genuinely needed to make the workflow concrete. Do not over-interview; keep it tight.
 
@@ -112,9 +110,9 @@ Store the finished workflow skill inside the agent's own **`workflows/`** folder
 
 ## Step 6 — Offer to schedule it (hand off to the scheduler)
 
-A workflow becomes an **automation** when it runs on a schedule. Once the workflow skill exists, use guided Codex input: "Would you like this to run automatically on a schedule?" Options: "Yes — daily", "Yes — weekly", "No, I'll run it myself".
+A workflow becomes an **automation** when it runs on a schedule. Once the workflow skill exists, ask exactly: "Would you like this to run automatically on a schedule?" Options: "Yes — daily", "Yes — weekly", "No, I'll run it myself".
 
-If they choose daily or weekly, ask the time with a second guided Codex prompt so they never face a blank prompt — for example "What time should it run?" with options like "7:00 AM", "8:00 AM", "9:00 AM", "Other time" (the "Other time" choice is the free-text path). For weekly, also ask which day the same way.
+If they choose daily or weekly, ask the time with a second scripted text question so they never face a blank prompt — for example "What time should it run?" with options like "7:00 AM", "8:00 AM", "9:00 AM", "Other time" (the "Other time" choice is the free-text path). For weekly, also ask which day the same way.
 
 Then create or prepare a Codex automation if the current Codex app environment exposes automation creation. Pass it a **self-contained** prompt that runs this workflow skill — future runs must not depend on this conversation, so spell it out: which agent, which workflow skill to run, which connectors it may use, and what result it should produce. The automation prompt must also include this final-output rule: "In the final response, deliver only the useful workflow result and any plain-language action needed from the leader. Do not mention run logs, memory files, hidden runtime state, local paths, connector internals, command output, or implementation details."
 

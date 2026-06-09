@@ -25,7 +25,7 @@ Final user-facing output must be short, plain, and useful to a non-technical lea
 - Translate technical failures into plain next steps. For example, say "Calendar access needs to be reconnected" rather than naming connector scope errors.
 - Keep technical detail in internal logs or files. Do not expose it in the final response unless the leader explicitly asks.
 
-Keep every choice in Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available. If structured popup input is not available in the current Codex mode, ask the same question conversationally with the same concrete options and wait for the leader's answer before continuing.
+Normal Codex mode uses normal chat text for these questions. Ask each choice as a scripted text question with the exact options below, then wait for the leader's answer.
 
 The guiding principle: **extract and carry forward what is worthwhile; standardize the structure; never silently discard the leader's substance.** Back up everything before changing anything.
 
@@ -42,7 +42,7 @@ Then present them clearly:
 1. **Migrate it (recommended)** — "I'll keep all of your work. First I make a full backup of your current files, then I bring them up to the standard structure so everything works cleanly going forward. Nothing you wrote is lost."
 2. **Stop and do a clean rebuild instead** — "We leave this as-is and start fresh in a new folder, where I'll walk you through creating everything from scratch. Your current work here stays untouched, but the new AgentOS won't carry it over."
 
-Then call `request_user_input`: "Which would you like?" Options: "Migrate (recommended)" / "Stop".
+Then ask exactly: "Which would you like?" Options: "Migrate (recommended)" / "Stop".
 
 If they choose clean rebuild, stop this skill. Tell them to open a fresh, empty folder and run setup there for a clean build. Do not migrate and do not change anything here.
 
@@ -50,7 +50,7 @@ If they choose clean rebuild, stop this skill. Tell them to open a fresh, empty 
 
 If they chose migrate, explain plainly what will happen: "I'll keep all of your work. First I'll make a complete backup of your current AgentOS, then I'll go through each file, keep what's worth keeping, and rewrite everything into the standard structure so it works cleanly going forward. Your originals are saved and nothing is lost."
 
-Then call `request_user_input`: "Ready to go ahead?" Options: "Yes, migrate it" / "No, not now". If no, stop and change nothing. This is their second chance to back out before anything is touched.
+Then ask exactly: "Ready to go ahead?" Options: "Yes, migrate it" / "No, not now". If no, stop and change nothing. This is their second chance to back out before anything is touched.
 
 ## Step 4 — Full backup first (before any change)
 

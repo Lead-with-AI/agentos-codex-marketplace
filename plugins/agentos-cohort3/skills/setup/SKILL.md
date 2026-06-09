@@ -38,13 +38,13 @@ Final user-facing output must be short, plain, and useful to a non-technical lea
 - Do not modify bundled plugin files. They are read-only source.
 - Create files only. Never overwrite an existing AgentOS file.
 
-## Codex Popup-Input Rule
+## Scripted Interview Rule
 
-When the skill calls for a guided choice, you must call Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app. Do not print the question and options as normal chat text when the popup tool is available.
+Normal Codex mode uses normal chat text for these questions.
 
-Preserve the question sequence and option sets below. Use one popup per question. Use short option labels and one-sentence descriptions so the leader can choose without reading a long chat message.
+The setup interview must be deterministic for cohort testing and training videos. Ask the scripted questions below as normal chat text, one question at a time, and wait for the leader's answer before continuing.
 
-If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and provide a clear "Other / choose several" option, then ask one short follow-up only when needed. Conversational numbered-list questions are the last resort, only when the structured popup input tool is not available in the current Codex mode.
+Use the exact question text, option labels, option descriptions, and order below. Do not paraphrase, rename, reorder, merge, omit, or add options unless the leader explicitly asks to answer in their own words.
 
 ## Step 1 — Boundary checks: confirm this is a fresh top-level AgentOS root
 
@@ -57,7 +57,7 @@ Look at the working folder. If it has its own `AGENTS.md` whose content referenc
 Check the parent directory for `../USER.md` and `../ORG.md`. If they exist, this folder is a subfolder *inside* an existing AgentOS — setup must never run here. **Stop.** Tell the leader plainly that their AgentOS already exists one level up, and they should load it ("load my AgentOS") rather than set up a new one. Route to load and end the skill.
 
 **Check C — Does an AgentOS already exist in this folder?**
-Check the working folder for `USER.md` and `ORG.md`. If **either** exists, an AgentOS is already here — do not build a fresh one. Call `request_user_input` with this question: "I found an existing AgentOS here. What would you like to do?" Options: (1) "Load it" (route to load), (2) "Upgrade it (recommended)" (hand off to the `agentos-upgrade` skill). End setup after handing off.
+Check the working folder for `USER.md` and `ORG.md`. If **either** exists, an AgentOS is already here — do not build a fresh one. Ask exactly: "I found an existing AgentOS here. What would you like to do?" Options: (1) "Load it" (route to load), (2) "Upgrade it (recommended)" (hand off to the `agentos-upgrade` skill). End setup after handing off.
 
 **Only if all three checks are clear** — no agent signature, no parent AgentOS, nothing already here — proceed with a fresh build.
 
@@ -84,36 +84,64 @@ Greet the leader warmly in two or three sentences. Explain in plain language tha
 
 ## Step 3 — Interview (one question at a time)
 
-Interview the leader to learn enough about **them** — not just their company — to build a USER.md that genuinely describes the person. Ask **one thing at a time**, waiting for each answer. Keep questions short and human. The goal is a USER.md filled with the leader's truth, not template defaults.
+Interview the leader to learn enough about **them** — not just their company — to build a USER.md that genuinely describes the person. Ask **one scripted question at a time**, waiting for each answer. The goal is a USER.md filled with the leader's truth, not template defaults.
 
 ### Part A — Identity (plain questions)
 
-1. Their full name.
-2. What they would like to be called (preferred name).
-3. Their role and title.
-4. Their company name, and the company website if they have one (website optional).
+Ask these exact questions, in this exact order:
+
+1. "What is your full name?"
+2. "What would you like me to call you?"
+3. "What is your role and title?"
+4. "What is your company name? If there is a company website, include that too."
 
 Do not proceed past Part A until you have at least name, preferred name, role, and company name. Website may be left blank.
 
 ### Part B — Background (offer the paste option)
 
-Invite the leader to tell you about themselves in their own words. Say something like: "If you'd like, paste in a short bio, your LinkedIn summary, or just a few sentences about what you do and what you're responsible for — I'll use it to understand you better. Or skip this and we'll keep it light."
+Ask exactly: "If you'd like, paste in a short bio, your LinkedIn summary, or just a few sentences about what you do and what you're responsible for. I'll use it to understand you better. Or say 'skip' and we'll keep it light."
 
 If they paste or describe a background, capture it for the Background section of USER.md. If they skip, that is fine — leave Background brief.
 
-### Part C — How they like to work (guided choices)
+### Part C — How they like to work (scripted choices)
 
-For each of the following, call `request_user_input`. They can always pick an "other" / free-text path when the Codex app offers one. These shape how the assistant interacts with them. Offer real, distinct options — do not just ask open-ended, and do not print numbered option lists into chat when the popup tool is available.
+Ask each scripted choice below exactly as written. The leader can answer with the number or label. If they answer in their own words, map it to the closest option and state the mapping briefly before continuing.
 
-1. **Interaction style** — e.g. (a) Direct and concise — get to the point, (b) Warm and conversational, (c) Detailed and thorough — show the reasoning. 
-2. **How much pushback they want** — e.g. (a) Challenge me hard when something's weak, (b) Offer alternatives but don't belabor it, (c) Mostly do what I ask unless it's clearly wrong.
-3. **Response length by default** — e.g. (a) Short by default, expand on request, (b) Medium with structure, (c) Full detail.
+Question 1:
+
+```text
+How would you like your assistant to interact with you by default?
+
+1. Direct and concise: get to the point and keep the conversation moving.
+2. Warm and conversational: human and approachable, while still staying practical.
+3. Detailed and thorough: show more reasoning and context by default.
+```
+
+Question 2:
+
+```text
+How much pushback do you want from your assistant?
+
+1. Challenge me hard: point out weak assumptions, risks, and better alternatives directly.
+2. Offer alternatives: suggest a better route when useful, but don't belabor it.
+3. Mostly follow my lead: do what I ask unless something is clearly wrong or risky.
+```
+
+Question 3:
+
+```text
+How long should responses usually be?
+
+1. Short by default: answer quickly and expand only when I ask.
+2. Medium with structure: give enough context to be useful, usually with clear bullets.
+3. Full detail: include reasoning, context, and tradeoffs by default.
+```
 
 Capture each answer for the matching USER.md section (Working Style, Communication Preferences, Collaboration Preferences).
 
 ### Part D — Personal non-negotiables (optional)
 
-Ask, plainly, whether there's anything they want the assistant to always respect — giving concrete examples so they understand this means *personal* limits, not safety rules: "For example: never schedule before 9am, always use British spelling, never contact a particular person on my behalf. Anything like that?"
+Ask exactly: "Is there anything you want your assistant to always respect? For example: never schedule before 9am, always use British spelling, or never contact a particular person on your behalf. If not, say 'none'."
 
 Capture any answers for the Non-Negotiables section. If they have none, leave it with a short note that they can add some later. **Do not put agent safety rules here** (those live in the core files); only the leader's personal limits belong in this section.
 

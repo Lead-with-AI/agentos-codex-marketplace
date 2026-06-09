@@ -3,7 +3,7 @@ name: agentos-create-agent
 description: >
   Creates a new agent inside a leader's AgentOS — a dedicated helper such as a Chief of Staff,
   research assistant, or content agent. Proposes a role definition tailored to the leader's
-  context, confirms it through guided Codex input, then scaffolds the agent's folder.
+  context, confirms it through scripted text choices, then scaffolds the agent's folder.
   Triggered by "create a new agent", "add an agent", "build me an agent", "I want a chief of
   staff", or "set up an assistant for X". In Codex, the leader may invoke this skill explicitly
   from the skill picker or by asking in plain language. Use whenever the
@@ -43,26 +43,22 @@ Read, silently:
 
   Do not treat the reference as already fitting the leader. Even if the leader's role resembles the example, the reference is not their agent — it is a template-quality example. Never say or imply "this reference already fits you, so I'll just use it." Always build the agent from the interview answers and the leader's own context. Reuse the reference's *structure and standard*, never its example content as if it were the leader's.
 
-## Interview Rule — Use Codex Popup Input For Every Question
+## Scripted Interview Rule
 
-This is critical and overrides any default conversational habit. **Every question you put to the leader in this skill must call Codex's structured popup input tool, `request_user_input`, when it is available in the Codex app, with concrete options.** Do not print the question and options as normal chat text when the popup tool is available. Do not redesign the interview sequence. Do not drop into open-ended free-text mode unless the step explicitly offers a "let me describe it" / "let me write my own" path.
+Normal Codex mode uses normal chat text for these questions. Ask each choice as scripted text with concrete options, then wait for the leader's answer.
 
 Free-text entry is allowed **only** when it is presented as one of the offered choices (for example a "Let me write my own" option). It is never the default or the fallback. If a choice needs refinement, present the refinement as another guided Codex choice, not an open prompt.
-
-If the Codex app exposes native multi-select popup input, use it for questions that say multi-select. If only single-choice popup input is available, use the popup anyway and include an "Other / choose several" path, then ask one short follow-up only when needed.
-
-If structured popup input is not available in the current Codex mode, ask the same guided question conversationally with the same concrete options and wait for the leader's answer before continuing.
 
 ## Step 3 — Suggest a Chief of Staff only if they have no agents yet
 
 Check whether any agent subfolders already exist (directories containing their own `AGENTS.md`).
 
-- If **none exist yet**, this is their first agent. Use guided Codex input: "Would you like to start with a Chief of Staff? It's the most useful first agent for most leaders." Options: (1) "Yes, set up a Chief of Staff", (2) "No, a different kind of agent". 
-- If agents **already exist**, do **not** pitch the Chief of Staff again. Use guided Codex input: "What kind of agent would you like to add?" with a short open-ended set plus a "Let me describe it" option. Never repeat a stale Chief-of-Staff suggestion to a leader who already has one.
+- If **none exist yet**, this is their first agent. Ask exactly: "Would you like to start with a Chief of Staff? It's the most useful first agent for most leaders." Options: (1) "Yes, set up a Chief of Staff", (2) "No, a different kind of agent". 
+- If agents **already exist**, do **not** pitch the Chief of Staff again. Ask exactly: "What kind of agent would you like to add?" and include a short set of sensible options plus "Let me describe it". Never repeat a stale Chief-of-Staff suggestion to a leader who already has one.
 
-If they choose a different kind of agent, get its name via guided Codex input (offer a few common types plus "Let me name it"), then adapt the role-definition step below to that agent type.
+If they choose a different kind of agent, get its name with a scripted text question that offers a few common types plus "Let me name it", then adapt the role-definition step below to that agent type.
 
-## Step 4 — Define what the agent IS (propose a role, confirm by pop-up)
+## Step 4 — Define what the agent IS (propose a role, confirm by scripted choice)
 
 You are defining **what the agent is** — its role and identity — not what it does. Do **not** ask the leader to list tasks, workflows, or a daily routine. Workflows and skills come later, separately. This step settles the agent's role description only.
 
@@ -72,9 +68,9 @@ Using the leader's role, company, and background from `USER.md` and `ORG.md`, wr
 
 Output that definition to the leader as a short context block they can read (not as a question).
 
-### 4b. Confirm it with a pop-up
+### 4b. Confirm it with a scripted choice
 
-Immediately follow the definition with guided Codex input:
+Immediately follow the definition with this scripted text question:
 
 - **Question text:** "Does this role definition fit for you?"
 - **Options:**
@@ -85,9 +81,9 @@ If they accept, use your proposed definition. If they choose to write their own,
 
 State plainly, in one short line, that at this point you are defining the role — not yet what the agent does — and that workflows come later.
 
-### 4c. Tools (pop-up, multi-select)
+### 4c. Tools
 
-Use Codex guided input for source-system selection: "What should this agent be able to see?" Offer these as separate, individually selectable options — not bundled combinations:
+Ask exactly: "What should this agent be able to see? Choose any that apply." Offer these as separate options — not bundled combinations:
 
 - Email
 - Calendar
@@ -95,7 +91,7 @@ Use Codex guided input for source-system selection: "What should this agent be a
 - CRM
 - Other
 
-If the Codex guided-input UI supports selecting more than one option, allow multiple selections. If the current Codex UI only supports a single choice, present the same list as a checklist and ask the leader to choose all that apply in one answer. If they choose "Other", let them name it. Do not bundle options into either/or combos, and do not recite the leader's specific connected tools back to them. Note that the agent drafts and prepares but does not send or change anything without approval.
+Ask the leader to choose all that apply in one answer. If they choose "Other", let them name it. Do not bundle options into either/or combos, and do not recite the leader's specific connected tools back to them. Note that the agent drafts and prepares but does not send or change anything without approval.
 
 Do not proceed without at least the agent name and an accepted role definition.
 
