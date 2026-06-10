@@ -1,6 +1,6 @@
 {
   "name": "agentos-cohort3",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "Sets up and runs a personal AgentOS for business leaders. Initialize a portable operating layer, load its context each session, create scoped agents, design workflows, upgrade older AgentOS folders, and capture durable decisions.",
   "author": {
     "name": "Lead with AI"
@@ -17,10 +17,6 @@
     "brandColor": "#94E02F",
     "composerIcon": "./assets/lead-with-ai-icon.svg",
     "logo": "./assets/lead-with-ai-icon.svg",
-    "defaultPrompt": [
-      "Set up my AgentOS.",
-      "Load my AgentOS.",
-      "Create a new agent."
-    ]
+    "defaultPrompt": []
   }
 }
