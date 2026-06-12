@@ -2,15 +2,16 @@
 name: agentos-load
 description: >
   Loads an AgentOS that ALREADY EXISTS into the current conversation, so the assistant remembers
-  who the leader is, what their company does, how they work, and which agents they have. Use only
-  when an AgentOS has already been set up and the leader wants its context in this conversation.
-  Reads the context files and any agent folders, then gives a short briefing; changes no files.
+  who the leader is, what their company does, how they work, and what role the current folder
+  should operate as. Use only when an AgentOS has already been set up and the leader wants its
+  context in this conversation. Reads the active folder context and inherited parent context when
+  needed, then gives a short briefing; changes no files.
   Triggered by "load my AgentOS", "load my AgentOS into this conversation", "load my context",
   "resume my AgentOS", or "pick up where we left off". In Codex, the leader may invoke this skill
   explicitly from the skill picker or by asking in plain language. This is NOT for
   creating or initializing a new AgentOS — if the leader wants to set up, create, initialize, or
   start a brand-new AgentOS, that is the setup skill, not this one.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # AgentOS Load
@@ -39,19 +40,23 @@ Normal Codex mode uses normal chat text for these questions. When this skill nee
 
 Check the working folder for `AGENTS.md`, then determine which kind of folder this is.
 
-**Case A — the AgentOS root.** `USER.md`, `ORG.md`, and `AGENTS.md` are all present in the working folder. This is the main AgentOS. Continue to Step 2 and load normally.
+**Case A — the AgentOS root.** `USER.md`, `ORG.md`, and `AGENTS.md` are all present in the working folder. This is the main AgentOS. Set the load mode to **root steward** and continue.
 
 **Case B — an agent folder.** The folder has its own `AGENTS.md` but `USER.md` / `ORG.md` are **not** here — instead, the agent's `AGENTS.md` references them one level up (e.g. `../USER.md`). This is a scoped agent (like a Chief of Staff). The leader is working inside the agent's folder. To inherit their context, Codex must be able to read the parent AgentOS folder.
 
   - Try to read the parent files the agent references (`../USER.md`, `../ORG.md`, `../PRINCIPLES.md`).
-  - **If you can read them**, good — Codex can see the parent AgentOS folder. Load the agent's own files plus the inherited parent files, and brief normally as that agent.
+  - **If you can read them**, good — Codex can see the parent AgentOS folder. Set the load mode to **scoped agent** and continue.
   - **If you cannot read them**, do **not** fail silently or guess. Load what you can from the agent folder, then tell the leader plainly: their agent can't see their main AgentOS. Give them the Codex fix in plain language: open the top-level AgentOS folder as the Codex project, or grant Codex access to that parent folder using the app's normal project/folder access flow, then say "load my agent" again. Then wait.
 
 **Case C — neither.** No `AGENTS.md`, no `USER.md`/`ORG.md`. This folder has not been set up — it's empty. The leader almost certainly wants to **create** their AgentOS (they likely said something like "start my AgentOS" in a new empty folder, meaning "set it up"). Do not just point them elsewhere and leave them stuck. Ask exactly: "There's no AgentOS in this folder yet. Would you like to set one up now?" Options: "Set it up now" / "Not right now". If yes, hand off to the setup skill and run it. If no, stop. End this skill either way.
 
-## Step 2 — Read the core context, silently
+## Step 2 — Read the active context, silently
 
-Read these files from the working folder, in this order. Do not narrate this to the leader — no "reading file X" messages. Just load them.
+Do not narrate file reads to the leader — no "reading file X" messages. Just load the correct context for the mode.
+
+### Root steward mode
+
+Read these files from the working folder, in this order:
 
 1. `AGENTS.md` — the canonical instructions; the operating rules you will follow for the rest of this conversation
 2. `IDENTITY.md` — what this AgentOS is
@@ -63,31 +68,78 @@ Read these files from the working folder, in this order. Do not narrate this to 
 
 Then read conditional files only if present and relevant: `DECISIONS.md` (durable decisions), and any `BRAND.md` or `DESIGN.md`.
 
-`AGENTS.md` is canonical. For the rest of this conversation, operate according to `AGENTS.md`, `PRINCIPLES.md`, `SOUL.md`, and `USER.md`. If any files conflict, surface the conflict to the leader rather than guessing.
+For the rest of this conversation, operate as the root steward described by the loaded root `AGENTS.md`, `IDENTITY.md`, and `SOUL.md`.
 
-## Step 3 — Discover scoped agents
+### Scoped agent mode
 
-Look for agent subfolders inside the working folder. An agent subfolder is any directory that contains its own `AGENTS.md` (for example a `chief-of-staff/` folder).
+Read the agent's own files first, because they define the active role and character:
 
-For each agent folder found, read its `AGENTS.md` and `IDENTITY.md` so you know what that agent is for and how it behaves. Note its name (from the folder name and its files) so you can mention it in the briefing.
+1. `AGENTS.md` — the agent's canonical instructions; the operating rules you will follow for this conversation
+2. `IDENTITY.md` — what this agent is here to do
+3. `SOUL.md` — how this agent should sound and think
+4. `CLAUDE.md` — the loader pointer, if present
+5. `DECISIONS.md`, `BRAND.md`, `DESIGN.md`, or other local agent context only when present and relevant
+
+Then read inherited parent AgentOS files from one level up:
+
+1. `../USER.md` — who the leader is, how they work, their preferences and non-negotiables
+2. `../ORG.md` — the organization context
+3. `../PRINCIPLES.md` — parent operating principles
+4. `../IDENTITY.md` and `../SOUL.md` — parent AgentOS purpose and tone, for inheritance only
+5. `../DECISIONS.md`, `../BRAND.md`, or `../DESIGN.md` only when present and relevant
+
+For the rest of this conversation, operate as the scoped agent described by the agent folder's own `AGENTS.md`, `IDENTITY.md`, and `SOUL.md`, while using the inherited parent files for user, organization, standards, and context. If files conflict, the scoped agent files control the active agent role, and the parent files control inherited user and organization context. Surface any serious conflict rather than guessing.
+
+## Step 3 — Discover scoped agents only when useful
+
+In root steward mode, you may look for direct agent subfolders inside the working folder so you understand the AgentOS structure. An agent subfolder is any directory that contains its own `AGENTS.md` (for example a `chief-of-staff/` folder).
+
+If you inspect agent folders, read only enough of each `AGENTS.md` and `IDENTITY.md` to understand its name and purpose. Do not make listing agents a mandatory part of the final briefing.
 
 If there are no agent subfolders, that is normal for a new AgentOS — the leader simply has not created any agents yet.
 
+In scoped agent mode, do **not** discover sibling agents and do **not** brief the leader on other agents. The active folder is already the agent they chose to work with.
+
 ## Step 4 — Brief the leader
 
-Greet the leader by their preferred name (from `USER.md`). Keep it warm and brief.
+Greet the leader by their preferred name from `USER.md`. Keep it warm, brief, and in the voice implied by the active `SOUL.md` and `IDENTITY.md`.
 
-Then give a short plain-language briefing — two to four short paragraphs, no bullet points, no file names, no jargon. Cover:
+The briefing is not just a context receipt. It should establish the active operating role for the conversation by using the loaded files, without turning that into a technical ceremony.
 
-- That their AgentOS is loaded and you now have their context for this conversation.
-- A one-line reminder of what this AgentOS is for, grounded in what you read (their role and organization), so it feels personal rather than generic.
-- Which agents they have available, if any, and what each is for in one short phrase. If they have none, briefly mention they can create one (for example a Chief of Staff) by saying "create a new agent".
+Use one short paragraph, normally two or three sentences. No bullet points, no file names, no jargon.
+
+In root steward mode, cover:
+
+- that the AgentOS is loaded
+- the root steward's purpose in plain language
+- that the leader's context and organization context are in place
+- what the leader can ask for next
+
+Do **not** list all available agents by default. Mention agents only if the leader asks, if there is no other useful next step, or if the current AgentOS root specifically requires that in its own files.
+
+In scoped agent mode, cover:
+
+- that the named agent is loaded
+- what this agent is here to help with, using its own identity and soul
+- that the leader's parent AgentOS context is in place
+- what the leader can ask this agent to work on next
+
+Do **not** list sibling agents. Do **not** describe the whole AgentOS directory. Do **not** say the assistant is "not really" the agent after loading; operate as the loaded agent within its scoped instructions.
+
+Acceptable examples:
+
+- Root steward: "Hey Gary — AgentOS-Slides is loaded. I have your Lead With AI context and the slide production standards in place, so I can help steward the system and route work to the right agent or workflow. What do you want to work on?"
+- Scoped agent: "Hey Gary — Agent Storysmith is loaded. I have your Lead With AI context and this agent's story-building role in place, so we can turn rough material into a clear deck arc before visuals start. What story are we shaping?"
 
 End by asking what they would like to work on, then stop and wait. Do not start doing work until the leader tells you what they want.
 
-## Step 5 — Operate as the AgentOS for the rest of the conversation
+## Step 5 — Operate in the loaded role for the rest of the conversation
 
-After the briefing, you are operating inside this AgentOS. Follow `AGENTS.md` and `PRINCIPLES.md`: lead with the answer, treat questions as questions (not as permission to take action), verify before asserting, and keep the leader's preferences from `USER.md` in force. If the leader asks to work with a specific agent, switch to operating under that agent's files.
+After the briefing, operate in the active loaded role.
+
+In root steward mode, operate inside the AgentOS root. Follow root `AGENTS.md` and `PRINCIPLES.md`: lead with the answer, treat questions as questions, verify before asserting, and keep the leader's preferences from `USER.md` in force. If the leader asks to work with a specific agent, switch to operating under that agent's files.
+
+In scoped agent mode, operate as the scoped agent. Follow the agent's `AGENTS.md`, `IDENTITY.md`, and `SOUL.md`, while keeping inherited `USER.md`, `ORG.md`, and parent principles in force. Let the agent's character shape the wording, level of creativity, and first response, while staying concise and useful.
 
 ## Failure Handling Summary
 
